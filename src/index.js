@@ -1,52 +1,65 @@
-console.log('%c HI', 'color: firebrick')
-// Dog Pictures
-fetch("https://dog.ceo/api/breeds/image/random/4")
-.then(res => res.json())
-.then(resObj => {
+document.addEventListener("DOMContentLoaded", function() {
+  let dogImageContainer = document.getElementById("dog-image-container")
+    let dogBreedUL = document.querySelector("#dog-breeds")
 
-let dogDiv = document.getElementById("dog-image-container")
+  // console.log(dogImageContainer)
 
-function addMessageToSrc(message){    
-    let dogImg = document.createElement("img")
-    dogImg.src = message
-    dogDiv.append(dogImg)
-}
-// console.log(resObj)
-resObj.message.forEach(addMessageToSrc)
-})
+  //Challenge 1
+  fetch("https://dog.ceo/api/breeds/image/random/4")
+  .then(res => res.json())
+    .then(dogUrlImageObject => {
+      let dogUrl = dogUrlImageObject.message;
 
-// Dog Breeds
-
-fetch('https://dog.ceo/api/breeds/list/all')
-.then(res => res.json())
-.then(resObj => {
-
-    // console.log(resObj.message)
-let dogBreedsUL = document.getElementById("dog-breeds")
-
-function addMessageToLI(message){    
-    let dogBreedLI = document.createElement("li")
-    dogBreedLI.innerText = message
-    dogBreedsUL.append(dogBreedLI)
-    dogBreedLI.addEventListener("click", function(event){
-        event.target.style.color = 'blue'
-        // console.log(event.target)
+        dogUrl.forEach(url => {
+          let urlImg = `<img src="${url}"/>`
+            // console.log(url)
+            // console.log(urlImg)
+            dogImageContainer.innerHTML += urlImg
+      })
     })
-}
-let breedList = Object.keys(resObj.message).forEach(addMessageToLI)
+    //End of Challenge 1
 
-let breedDropdown = document.getElementById("breed-dropdown")
+  //Challenge 2
+  fetch("https://dog.ceo/api/breeds/list/all")
+  .then(res => res.json())
+  .then(dogNamesObject => {
+    let dogBreedArr = Object.keys(dogNamesObject.message)
+    dogBreedArr.forEach((breed) => addLi(breed))
+  });
 
-breedDropdown.addEventListener("change", function(event){
-    // if changed to a, only show breeds starting with "a"
-    if(event.target.value === "a"){
-        
+  function addLi(breed){
+    let dogBreedUl = document.querySelector('#dog-breeds')
+    dogBreedUl.innerHTML += `<li data-info="breed">${breed}</li>`
+  }
+  //End of Challenge 2
+
+  //Challenge 3
+  dogBreedUL.addEventListener("click", function(event){
+    if (event.target.dataset.info === "breed") {
+      event.target.style.color = "green"
     }
+  })
+  // End of Challenge 3
 
-    function breedsStartsWith(letter){
-        letter 
-    }
+  // Challenge 4
+  let dogSelect = document.getElementById('breed-dropdown')
+  dogSelect.addEventListener("change", (event) => {
+    fetch("https://dog.ceo/api/breeds/list/all")
+    .then(res => res.json())
+    .then(res => {
+      let dogBreedsArr = Object.keys(res.message)
+
+      let filteredArray = dogBreedsArr.filter(breed => {
+        return breed.startsWith(event.target.value)
+      })
+
+      dogBreedUL.innerHTML = ""
+      console.log(addLi)
+      filteredArray.forEach(addLi)
+
+
+    })
+  })
+  // Challenge 4
+
 })
-
-})
-
